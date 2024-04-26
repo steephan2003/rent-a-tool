@@ -1,0 +1,37 @@
+.tool-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+    width: 200px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tool-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .tool-card h3 {
+    margin-bottom: 10px;
+  }
+  
+  .tool-card p {
+    margin-bottom: 15px;
+  }
+  
+  .tool-card button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .tool-card button:hover {
+    background-color: #0056b3;
+  }
+  
