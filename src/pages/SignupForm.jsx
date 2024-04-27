@@ -1,40 +1,111 @@
-import React from 'react';
+import React, { useState } from 'react';
+import './SignUpsty.css';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'; // Update import statement
 import Navbar from './Navbar';
-import "./SignUpsty.css"
-const SignUpForm = () => {
+import { firebaseApp } from '../../firebase'; // Assuming you have exported your Firebase app instance as firebaseApp
+
+const auth = getAuth(firebaseApp); // Initialize Firebase Auth instance
+
+const SignUpForm = ({ onSignUp }) => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSignUp = async (event) => {
+    event.preventDefault();
+    try {
+      // Check if passwords match
+      if (password !== confirmPassword) {
+        setError('Passwords do not match');
+        return;
+      }
+
+      // Use Firebase authentication to sign up the user
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      // If signup successful, call the onSignUp callback to navigate
+      if (typeof onSignUp === 'function') {
+        onSignUp();
+      } else {
+        console.error('onSignUp is not a function');
+      }
+    } catch (error) {
+      setError('Error signing up: ' + error.message);
+    }
+  };
+
   return (
-    <div>
-      <Navbar /> {/* Include the Navbar */}
-      <div className="signup-form">
-        <h2>Sign Up</h2>
-        <form>
-          <div className="form-group">
-            <label htmlFor="firstName">First Name</label>
-            <input type="text" id="firstName" name="firstName" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="lastName">Last Name</label>
-            <input type="text" id="lastName" name="lastName" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input type="password" id="password" name="password" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" />
-          </div>
-          <button type="submit">Sign Up</button>
-        </form>
-      </div>
+    <div className="signup-form">
+      <Navbar />
+      <h2>Sign Up</h2>
+      {error && <p className="error">{error}</p>}
+      <form onSubmit={handleSignUp}>
+        <div className="form-group">
+          <label htmlFor="firstName">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="lastName">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="phone">Phone Number</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </div>
+        <button type="submit">Sign Up</button>
+      </form>
     </div>
   );
 };

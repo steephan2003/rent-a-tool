@@ -1,25 +1,31 @@
 import React, { useState } from 'react';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'; // Import Firebase authentication functions
 import Navbar from './Navbar';
 import './LoginForm.css';
+import { firebaseApp } from '../../firebase'; // Assuming you have exported your Firebase app instance as firebaseApp
 
-const LoginForm = ({ onLogin }) => { // Pass onLogin function as a prop
+const auth = getAuth(firebaseApp); // Initialize Firebase Auth instance
+
+const LoginForm = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
 
-    if (!email || !password) {
-      setError('Please enter both email and password');
-      return;
-    }
+    try {
+      // Use Firebase authentication to sign in the user
+      await signInWithEmailAndPassword(auth, email, password);
 
-    if (email === 'user@example.com' && password === 'password') {
-      // Emit login event
-      onLogin();
-    } else {
-      setError('Invalid email or password');
+      // If login successful, call the onLogin callback
+      if (typeof onLogin === 'function') {
+        onLogin();
+      } else {
+        console.error('onLogin is not a function');
+      }
+    } catch (error) {
+      setError('Error signing in: ' + error.message);
     }
   };
 

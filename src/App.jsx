@@ -8,8 +8,8 @@ import OrderPage from './pages/OrderPage';
 import MyOrderPage from './pages/MyOrderPage';
 import CancellationPage from './pages/CancellationPage';
 import FeedbackPage from './pages/FeedbackForm';
-
-//Hello
+import AdminLoginPage from './pages/AdminLoginPage';
+import AdminDashboard from './pages/AdminDashboard';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,7 +34,7 @@ const App = () => {
         />
         <Route
           path="/signup"
-          element={isLoggedIn ? <Navigate to="/services" /> : <SignupForm />}
+          element={isLoggedIn ? <Navigate to="/login" /> : <SignupForm />}
         />
         <Route
           path="/services"
@@ -55,6 +55,16 @@ const App = () => {
         <Route
           path="/feedback"
           element={isLoggedIn ? <FeedbackPage /> : <Navigate to="/" />}
+        />
+        <Route path="/admin" element={<AdminLoginPage onLogin={handleLogin} />} />
+        {/* 
+          Route for Admin Dashboard.
+          Renders AdminDashboard component only if user is authenticated (isLoggedIn is true).
+          Otherwise, redirects to admin login page.
+        */}
+        <Route 
+          path="/admin/dashboard" 
+          element={isLoggedIn ? <AdminDashboard /> : <Navigate to="/admin" />} 
         />
       </Routes>
     </Router>
